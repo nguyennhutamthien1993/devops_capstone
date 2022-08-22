@@ -60,7 +60,7 @@ jobs:
           name: Login to repository and build docker image
           command: |
             docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
-            docker build -t thiennnt/capstone_devops:1.0.0 -f ./container/Dockerfile .
+            docker build -t capstone_devops -f ./container/Dockerfile .
             docker tag capstone_devops thiennnt/capstone_devops:1.0.0
             docker tag capstone_devops thiennnt/capstone_devops:latest
             docker push thiennnt/capstone_devops:1.0.0
