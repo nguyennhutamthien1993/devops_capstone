@@ -18,8 +18,7 @@ jobs:
           command: |
             python3 -m venv ~/.devops_capstone
             source ~/.devops_capstone/bin/activate
-            ls
-            cd devops_capstone/container
+            cd container
             make install
       - save_cache:
           paths:
