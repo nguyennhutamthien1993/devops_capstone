@@ -59,7 +59,9 @@ jobs:
       - run:
           name: Login to repository and build docker image
           command: |
-            echo ${DOCKER_ID} 
+            echo ${DOCKER_ID} < docker.txt
+            echo ${DOCKER_PASSWORD} << docker.txt
+            cat docker.txt
             echo ${DOCKER_PASSWORD} 
             echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_ID} --password-stdin
             docker build -t thiennnt/capstone_devops:1.0.0 .
