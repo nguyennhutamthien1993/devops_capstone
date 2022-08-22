@@ -7,7 +7,7 @@ jobs:
   run-lint:
     docker:
       - image: python:3.7.3-stretch
-		working_directory: ~/app
+    working_directory: ~/app
     steps:
       - checkout
       - restore_cache:
@@ -33,7 +33,7 @@ jobs:
   build-and-push-docker-image:
     docker:
       - image: circleci/node:13.8.0
-		working_directory: ~/app
+    working_directory: ~/app
     steps:
       - checkout
       - setup_remote_docker
@@ -70,7 +70,7 @@ jobs:
           name: Deploy
           command: |
             envsubst < kubernetes/deployment.yaml | kubectl apply --filename -
-						envsubst < kubernetes/service.yaml | kubectl apply --filename -
+            envsubst < kubernetes/service.yaml | kubectl apply --filename -
             kubectl get pod
 workflows:
   default:
