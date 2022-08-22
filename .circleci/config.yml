@@ -30,7 +30,6 @@ jobs:
           name: Run lint
           command: |
             source ~/.devops_capstone/bin/activate
-            ls ./.devops_capstone
             cd container
             make lint
 
