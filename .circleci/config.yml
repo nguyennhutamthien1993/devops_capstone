@@ -20,7 +20,8 @@ jobs:
             source ~/.devops_capstone/bin/activate
             cd container
             make install
-            make lint
+            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+            sudo chmod +x /bin/hadolint
       - save_cache:
           paths:
             - ./.devops_capstone
