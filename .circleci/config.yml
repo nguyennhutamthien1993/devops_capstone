@@ -61,6 +61,7 @@ jobs:
           command: |
             docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
             docker build -t thiennnt/capstone_devops:1.0.0 -f ./container/Dockerfile .
+            docker tag capstone_devops ${DOCKER_HUB_ID}/${DOCKER_REPOSITORY}:${VERSION}
             docker push thiennnt/capstone_devops:1.0.0
       - run:
           name: Prepare K8S templates
