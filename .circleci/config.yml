@@ -18,6 +18,7 @@ jobs:
           command: |
             python3 -m venv ~/.devops_capstone
             source ~/.devops_capstone/bin/activate
+            ls
             cd devops_capstone/container
             make install
       - save_cache:
@@ -27,7 +28,7 @@ jobs:
       - run:
           name: Run lint
           command: |
-            source .devops_capstone/bin/activate
+            source ~/.devops_capstone/bin/activate
             make lint
 
   build-and-push-docker-image:
