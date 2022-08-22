@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone_app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: _1
+      version: 1.0.0
+  template:
+    metadata:
+      labels:
+        app: _1
+        version: 1.0.0
+    spec:
+      containers:
+      - name: capstone_app
+        image: thiennnt/capstone_app:1.0.0
+        ports:
+        - containerPort: 80
