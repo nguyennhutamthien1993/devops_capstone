@@ -20,6 +20,7 @@ jobs:
             source ~/.devops_capstone/bin/activate
             cd container
             make install
+            make lint
       - save_cache:
           paths:
             - ./.devops_capstone
@@ -28,6 +29,7 @@ jobs:
           name: Run lint
           command: |
             source ~/.devops_capstone/bin/activate
+            ls ./.devops_capstone
             cd container
             make lint
 
