@@ -28,6 +28,7 @@ jobs:
           name: Run lint
           command: |
             source ~/.devops_capstone/bin/activate
+            cd container
             make lint
 
   build-and-push-docker-image:
