@@ -64,6 +64,7 @@ jobs:
             docker tag capstone_devops thiennnt/capstone_devops:1.0.0
             docker tag capstone_devops thiennnt/capstone_devops:latest
             docker push thiennnt/capstone_devops:1.0.0
+            docker push thiennnt/capstone_devops:latest
       - run:
           name: Prepare K8S templates
           command: |
