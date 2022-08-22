@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Login to repository and build docker image
           command: |
-            eval $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
             docker build -t thiennnt/capstone_devops:1.0.0 .
             docker push thiennnt/capstone_devops:1.0.0
       - run:
