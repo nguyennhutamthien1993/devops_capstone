@@ -59,6 +59,7 @@ jobs:
       - run:
           name: Login to repository and build docker image
           command: |
+            kubectl version
             docker build -t capstone_devops -f ./container/Dockerfile .
             docker tag capstone_devops thiennnt/capstone_devops:1.0.0
             docker tag capstone_devops thiennnt/capstone_devops:latest
