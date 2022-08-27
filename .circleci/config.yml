@@ -72,6 +72,7 @@ jobs:
           name: Prepare K8S templates
           command: |
             aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
+            kubectl config current-context
       - run:
           name: Deploy
           command: |
