@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: _1
+      app: capstone-app
       version: 1.0.0
   template:
     metadata:
       labels:
-        app: _1
+        app: capstone-app
         version: 1.0.0
     spec:
       containers:
