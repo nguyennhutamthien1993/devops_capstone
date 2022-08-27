@@ -60,18 +60,18 @@ jobs:
       - run:
           name: Login to repository and build docker image
           command: |
+            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+            
             docker build -t capstone_devops -f ./container/Dockerfile .
             docker tag capstone_devops thiennnt/capstone_devops:1.0.0
             docker tag capstone_devops thiennnt/capstone_devops:latest
             
-            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
             docker push thiennnt/capstone_devops:1.0.0
             docker push thiennnt/capstone_devops:latest
       - run:
           name: Prepare K8S templates
           command: |
-            aws eks --region us-east-1 update-kubeconfig --name capstone_cluster
-            kubectl version
+            aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
       - run:
           name: Deploy
           command: |

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capstone_app
+  name: capstone-app
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
         version: 1.0.0
     spec:
       containers:
-      - name: capstone_app
+      - name: capstone-app
         image: thiennnt/capstone_app:1.0.0
         ports:
         - containerPort: 80
