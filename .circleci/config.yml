@@ -44,6 +44,7 @@ jobs:
           name: Install awscli
           command: |
             sudo pip3 install awscli
+            sudo pip3 install python-gettext
       - run:
           name: Install aws-iam-authenticator
           command: |
@@ -56,20 +57,20 @@ jobs:
             curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/kubectl
             chmod +x ./kubectl
             sudo mv ./kubectl /usr/local/bin/kubectl
-      # - run:
-          # name: Login to repository and build docker image
-          # command: |
-            # docker build -t capstone_devops -f ./container/Dockerfile .
-            # docker tag capstone_devops thiennnt/capstone_devops:1.0.0
-            # docker tag capstone_devops thiennnt/capstone_devops:latest
+      - run:
+          name: Login to repository and build docker image
+          command: |
+            docker build -t capstone_devops -f ./container/Dockerfile .
+            docker tag capstone_devops thiennnt/capstone_devops:1.0.0
+            docker tag capstone_devops thiennnt/capstone_devops:latest
             
-            # docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
-            # docker push thiennnt/capstone_devops:1.0.0
-            # docker push thiennnt/capstone_devops:latest
+            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+            docker push thiennnt/capstone_devops:1.0.0
+            docker push thiennnt/capstone_devops:latest
       - run:
           name: Prepare K8S templates
           command: |
-            aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
+            aws eks --region us-east-1 update-kubeconfig --name capstone_cluster
             kubectl version
       - run:
           name: Deploy
