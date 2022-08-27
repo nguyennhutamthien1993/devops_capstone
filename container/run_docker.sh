@@ -4,7 +4,7 @@
 
 # Step 1:
 # Build image and add a descriptive tag
-docker build --tag=thiennnt/devops_capstone .
+docker build -t capstone_devops -f ./container/Dockerfile .
 
 # Step 2: 
 # List docker images
@@ -12,4 +12,4 @@ docker image ls
 
 # Step 3: 
 # Run flask app
-docker run --name capstone -p 8000:80 thiennnt/devops_capstone
+docker run --name capstone -p 8000:80 capstone_devops
