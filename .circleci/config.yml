@@ -130,5 +130,3 @@ workflows:
           requires: [build-and-push-docker-image]
       - deploy-blue:
           requires: [deploy-green]
-      - remove-old-blue:
-          requires: [deploy-blue]
