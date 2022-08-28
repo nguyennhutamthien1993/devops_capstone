@@ -125,6 +125,7 @@ jobs:
   remove-old-blue:
     docker:
       - image: circleci/python:3.7
+    working_directory: ~/app
     steps:
       - checkout
       - run:
@@ -159,3 +160,5 @@ workflows:
           requires: [build-and-push-docker-image]
       - deploy-blue:
           requires: [deploy-green]
+      - remove-old-blue:
+          requires: [deploy-blue]
