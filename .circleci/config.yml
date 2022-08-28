@@ -32,7 +32,7 @@ jobs:
             source ~/.devops_capstone/bin/activate
             cd container
             make lint
-  deploy-and-push-docker-image:
+  build-and-push-docker-image:
     docker:
       - image: circleci/python:3.7
     working_directory: ~/app
