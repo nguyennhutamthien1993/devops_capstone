@@ -35,8 +35,8 @@ nodeGroups:
   labels:
     alpha.eksctl.io/cluster-name: eks-cluster
     alpha.eksctl.io/nodegroup-name: node-groups
-  maxSize: 1
-  minSize: 1
+  maxSize: 3
+  minSize: 2
   name: node-groups
   privateNetworking: false
   securityGroups:
