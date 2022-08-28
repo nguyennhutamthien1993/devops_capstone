@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: capstone-app
-        image: thiennnt/capstone_app:1.0.0
+        image: thiennnt/capstone_devops:1.0.0
         ports:
         - containerPort: 80
