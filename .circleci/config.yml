@@ -32,14 +32,31 @@ jobs:
             source ~/.devops_capstone/bin/activate
             cd container
             make lint
-
-  build-and-push-docker-image:
+  deploy-and-push-docker-image:
     docker:
       - image: circleci/python:3.7
     working_directory: ~/app
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Login to repository and build docker image
+          command: |
+            export VERSION=$(cat container/version.txt)
+            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+            
+            docker build -t capstone_devops -f ./container/Dockerfile .
+            docker tag capstone_devops thiennnt/capstone_devops:${VERSION}
+            docker tag capstone_devops thiennnt/capstone_devops:latest
+            
+            docker push thiennnt/capstone_devops:${VERSION}
+            docker push thiennnt/capstone_devops:latest
+  deploy-green:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/app
+    steps:
+      - checkout
       - run:
           name: Install awscli
           command: |
@@ -58,30 +75,60 @@ jobs:
             chmod +x ./kubectl
             sudo mv ./kubectl /usr/local/bin/kubectl
       - run:
-          name: Login to repository and build docker image
+          name: Prepare K8S templates
           command: |
-            docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
-            
-            docker build -t capstone_devops -f ./container/Dockerfile .
-            docker tag capstone_devops thiennnt/capstone_devops:1.0.0
-            docker tag capstone_devops thiennnt/capstone_devops:latest
-            
-            docker push thiennnt/capstone_devops:1.0.0
-            docker push thiennnt/capstone_devops:latest
+            aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
+            kubectl config current-context
+      - run:
+          name: Deploy green
+          command: |
+            export VERSION=$(cat container/version.txt)
+            echo ${VERSION}
+            envsubst < kubernetes/green/deployment.yaml | kubectl apply --filename -
+            envsubst < kubernetes/green/service.yaml | kubectl apply --filename -
+  deploy-blue:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip3 install awscli
+            sudo apt-get install gettext-base
+      - run:
+          name: Install aws-iam-authenticator
+          command: |
+            curl -o aws-iam-authenticator curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+            chmod +x ./aws-iam-authenticator
+            sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+      - run:
+          name: Install kubectl
+          command: |
+            curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            sudo mv ./kubectl /usr/local/bin/kubectl
       - run:
           name: Prepare K8S templates
           command: |
             aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
             kubectl config current-context
       - run:
-          name: Deploy
+          name: Deploy green
           command: |
-            envsubst < kubernetes/deployment.yaml | kubectl apply --filename -
-            envsubst < kubernetes/service.yaml | kubectl apply --filename -
-            kubectl get pod
+            export VERSION=$(cat container/version.txt)
+            echo ${VERSION}
+            envsubst < kubernetes/blue/service.yaml | kubectl apply --filename -
 workflows:
   default:
     jobs:
       - run-lint
       - build-and-push-docker-image:
           requires: [run-lint]
+      - deploy-green:
+          requires: [build-and-push-docker-image]
+      - deploy-blue:
+          requires: [deploy-green]
+      - remove-old-blue:
+          requires: [deploy-blue]
