@@ -150,6 +150,24 @@ jobs:
           command: |
             aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
             kubectl config current-context
+      - run:
+          name: Remove the old blue deployments and green service
+          command: |
+            export VERSION=$(cat container/version.txt)
+            
+            for deploy in $(kubectl get deployments -o jsonpath="{.items[*].metadata.name}");
+            do
+              if [[ $deploy != capstone-app-$VERSION ]];
+              then
+                echo $deploy
+                kubectl delete deployments $deploy
+              fi
+            done
+            
+            if kubectl get svc | grep capstone-app-green;
+            then
+              kubectl delete services capstone-app-green
+            fi
 workflows:
   default:
     jobs:
