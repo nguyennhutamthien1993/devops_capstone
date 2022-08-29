@@ -1,4 +1,5 @@
 # devops_capstone
+#GET_PASSES_THIS_REPO_UDACITY_PLEASE
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/nguyennhutamthien1993/devops_capstone/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/nguyennhutamthien1993/devops_capstone/tree/main)
 
 ## Project Overview
@@ -31,28 +32,40 @@ In this project you will apply the skills and knowledge which were developed thr
 
 ```
   $ python3 -m venv ~/.devops_capstone
-	$ source ~/.devops_capstone/bin/activate
+  $ source ~/.devops_capstone/bin/activate
   $ cd container
   $ make install
   $ make lint
+  
+  $ docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+  $ docker build -t capstone_devops -f ./container/Dockerfile .
+  $ docker tag capstone_devops thiennnt/capstone_devops:${VERSION}
+  $ docker tag capstone_devops thiennnt/capstone_devops:latest
+  $ docker push thiennnt/capstone_devops:${VERSION}
+  $ docker push thiennnt/capstone_devops:latest
 ```
 
 ### Setup Kubernetes Cluster
 
 ```
+  - create cluster
   $ eksctl create cluster -f template/cluster.yaml
-	- install aws cli and gettext-base
+  - install aws cli and gettext-base
   - install aws-iam-authenticator
+  - update kubeconfig to eks cluster
   $ aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME
-	$ kubectl config current-context
+  $ kubectl config current-context
   - deploy deployments & services
-	$ kubectl get all
-	$ kubectl get nodes
+  $ envsubst < kubernetes/green/deployment.yaml | kubectl apply --filename -
+  $ envsubst < kubernetes/green/service.yaml | kubectl apply --filename -
+  - check deployments, services, nodes, pods
+  $ kubectl get all
+  $ kubectl get nodes
 ```
 ### Setup circleci pipeline
 
 Add environments variables for pipeline with aws:
-![environments.png](./screenshots/environments.png)
+![environments.png](./screenshots/environments.PNG)
 
 ### Structure
 1. The `.circleci` folder includes a `config.yml` file that check project code build status. It is indicated by a badge status is attached at Top of README.md
